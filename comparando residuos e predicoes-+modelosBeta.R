@@ -355,4 +355,53 @@ library(sjPlot)
 tab_model(model22, show.ci = F, auto.label = T, show.se = T,
           collapse.se = T, wrap.labels = 60, p.style = "stars")
 
+summary(base$log_pop_18)
+summary(base$superior_comp)
+sd(base$idh_mun)
+sd(base$superior_comp)
+cor(base$log_pop_18, base$rural_2010)
+populacao <- base$log_pop_18 
+prop.rural <- base$rural_2010
+
+fit <- lm(populacao~prop.rural)
+library(ggplot2)
+
+
+base11 <- data.frame(populacao,prop.rural)
+summary(fit)
+plot(populacao,prop.rural)
+base11$predicted <- predict(fit)   # Save the predicted values
+base11$residuals <- residuals(fit) # Save the residual values
+
+y1 <- ggplot(base11, aes(x = prop.rural, y =populacao)) +
+  geom_smooth(method = "lm", se = FALSE, color = "red") +
+  geom_segment(aes(xend = prop.rural, yend = predicted), alpha = .5) +      # draw line from point to line
+  geom_point(aes(color = abs(residuals), size = abs(residuals))) +  # size of the points
+  scale_color_continuous(low = "black", high = "blue") +             # colour of the points mapped to residual size - green smaller, red larger
+  guides(color = FALSE, size = FALSE) +                             # Size legend removed
+  geom_point(aes(y = predicted), shape = 1) + xlab("") +ylab("")+
+  theme_classic()
+y1
+
+
+library(tidyverse)
+library(knitr)
+library(kableExtra)
+
+b577 <- base %>% 
+  dplyr::select(Cidade, prop_formados) %>% 
+  arrange(prop_formados)
+b577 %>%
+  kbl(caption = "Prop formados por Cidade") %>%
+  kable_classic(full_width = F, html_font = "Garamond")
+
+
+MENOR <- subset(base, prop_formados=="Menor")
+summary(MENOR)
+modeloMENOR <- lm(Bolsonaro2018 ~ Neves14, data=MENOR)
+MAIOR <- subset(base, prop_formados=="Maior")
+summary(MAIOR)
+modeloMAIOR <- lm(Bolsonaro2018 ~ Neves14, data=MAIOR)
+tab_model(modeloMENOR, modeloMAIOR, show.ci = F, auto.label = T, show.se = T,
+          collapse.se = T, wrap.labels = 60, p.style = "stars")
 
