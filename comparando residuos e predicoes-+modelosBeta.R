@@ -405,3 +405,21 @@ modeloMAIOR <- lm(Bolsonaro2018 ~ Neves14, data=MAIOR)
 tab_model(modeloMENOR, modeloMAIOR, show.ci = F, auto.label = T, show.se = T,
           collapse.se = T, wrap.labels = 60, p.style = "stars")
 
+# A e B hipotético
+max <- max(dados$Bolsonaro_real)
+max
+library(readxl)
+hipotetico_extra <- read_excel("D:/ATUALIZA_PASTA_d/A Nova pasta/residuos_4textos/hipotetico_extra.xlsx")
+
+plot(hipotetico_extra$A, 
+     col = "blue", ylim = c(40, 91), xlim = c(40, 91), 
+     xlab = "", ylab = "", 
+     main = "AltoVale: Bolsonaro vs. Neves14,prop. de formados")
+points(hipotetico_extra$B,
+       col = "red", pch = 16)
+points(87.73,87.73, col = "green", pch=88)
+legend(56, 70, 
+       legend = c("Menor prop. de formados", "Maior prop. de formados",
+                  "Cidade com maior votação de Bolsonaro no Alto Vale"), 
+       col = c("blue", "red", "green"), 
+       pch = c(11, 11,88), bty = "n")
